@@ -2,8 +2,7 @@
 #include <cuda.h>
 #include <stdlib.h>
 #define N 10
-
-void add(int *a, int *b, int *c)
+__global__ void add(int *a, int *b, int *c)
 {
     int tid = blockIdx.x * blockDim.x + threadIdx.x;
     if (tid < N)
@@ -11,15 +10,14 @@ void add(int *a, int *b, int *c)
         c[tid] = a[tid] + b[tid];
     }
 }
-
 int main(void)
 {
-    int a[N], b[N], c[N], i;
+    int a[N], b[N], c[N];
     int *dev_a, *dev_b, *dev_c;
     cudaMalloc((void **)&dev_a, N * sizeof(int));
     cudaMalloc((void **)&dev_b, N * sizeof(int));
     cudaMalloc((void **)&dev_c, N * sizeof(int));
-    for (i = 0; i < N; i++)
+    for (int i = 0; i < N; i++)
     {
         a[i] = i;
         b[i] = i * 2;
@@ -29,7 +27,7 @@ int main(void)
     cudaMemcpy(dev_c, c, N * sizeof(int), cudaMemcpyHostToDevice);
     add<<<1, N>>>(dev_a, dev_b, dev_c);
     cudaMemcpy(c, dev_c, N * sizeof(int), cudaMemcpyDeviceToHost);
-    for (i = 0; i < N; i++)
+    for (int i = 0; i < N; i++)
     {
         printf("%d+%d=%d\n", a[i], b[i], c[i]);
     }
