@@ -43,10 +43,13 @@ int main(void)
     float time = sdkGetTimerValue(&timer);
     sdkDeleteTimer(&timer);
 
+    printf("dupa1", a[i], b[i], c[i]);
     for (int i = 0; i < N; i++)
     {
         printf("%d+%d=%d\n", a[i], b[i], c[i]);
     }
+    
+    printf("dupa2", a[i], b[i], c[i]);
 
     cudaMemcpy(a_h, a_d, sizeof(float) * N, cudaMemcpyDeviceToHost);
     cudaFree(a_d);
