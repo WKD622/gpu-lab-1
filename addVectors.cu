@@ -4,7 +4,7 @@
 #include <helper_timer.h>
 #include <time.h>
 
-__global__ void add(int *a, int *b, int *c)
+__global__ void add(int *a, int *b, int *c, int N)
 {
     int tid = blockIdx.x * blockDim.x + threadIdx.x;
     if (tid < N)
@@ -36,7 +36,7 @@ bool check_ans(int* c, int* dev_c, int N) {
 int main(void)
 {
 
-    int N = atoi(argv[1]);
+    int N = atoi(argv[1], char *argv[]);
     int block_size = atoi(argv[2]);
     int grid_size = (int)ceil((float)N / block_size);
 
