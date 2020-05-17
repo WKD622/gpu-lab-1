@@ -2,6 +2,7 @@
 #include <cuda.h>
 #include <stdlib.h>
 #define N 10
+
 __global__ void add(int *a, int *b, int *c)
 {
     int tid = blockIdx.x * blockDim.x + threadIdx.x;
@@ -14,6 +15,14 @@ int main(void)
 {
     int a[N], b[N], c[N];
     int *dev_a, *dev_b, *dev_c;
+
+    cudaMalloc((void **)&a_d, size); // alokuj pamięć na GPU
+    cudaMemcpy(a_d, a_h, size, cudaMemcpyHostToDevice);
+
+    StopWatchInterface *timer = NULL;
+    sdkCreateTimer(&timer);
+    sdkResetTimer(&timer);
+    sdkStartTimer(&timer);
     cudaMalloc((void **)&dev_a, N * sizeof(int));
     cudaMalloc((void **)&dev_b, N * sizeof(int));
     cudaMalloc((void **)&dev_c, N * sizeof(int));
@@ -27,10 +36,22 @@ int main(void)
     cudaMemcpy(dev_c, c, N * sizeof(int), cudaMemcpyHostToDevice);
     add<<<1, N>>>(dev_a, dev_b, dev_c);
     cudaMemcpy(c, dev_c, N * sizeof(int), cudaMemcpyDeviceToHost);
+
+    kernel<<<n_blocks, block_size>>>(a_d, N);
+    cudaThreadSynchronize();
+    sdkStopTimer(&timer);
+    float time = sdkGetTimerValue(&timer);
+    sdkDeleteTimer(&timer);
+
     for (int i = 0; i < N; i++)
     {
         printf("%d+%d=%d\n", a[i], b[i], c[i]);
     }
+
+    cudaMemcpy(a_h, a_d, sizeof(float) * N, cudaMemcpyDeviceToHost);
+    cudaFree(a_d);
+    printf("Time for the kernel: %f ms\n", time);
+
     cudaFree(dev_a);
     cudaFree(dev_b);
     cudaFree(dev_c);
