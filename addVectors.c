@@ -1,9 +1,10 @@
 #include <stdio.h>
 #include <cuda.h>
 #include <stdlib.h>
+
 #define N 10
-    __global__ void
-    add(int *a, int *b, int *c)
+__global__ void
+add(int *a, int *b, int *c)
 {
     int tid = blockIdx.x * blockDim.x + threadIdx.x;
     if (tid < N)
@@ -11,11 +12,9 @@
         c[tid] = a[tid] + b[tid];
     }
 }
+
 int main(void)
-{   
-    StopWatchInterface *timer=NULL;
-    sdkCreateTimer(&timer);
-    sdkStartTimer(&timer);
+{
     int a[N], b[N], c[N];
     int *dev_a, *dev_b, *dev_c;
     cudaMalloc((void **)&dev_a, N * sizeof(int));
@@ -35,7 +34,6 @@ int main(void)
     {
         printf("%d+%d=%d\n", a[i], b[i], c[i]);
     }
-    sdkResetTimer(&timer);
     cudaFree(dev_a);
     cudaFree(dev_b);
     cudaFree(dev_c);
