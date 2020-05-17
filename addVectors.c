@@ -3,8 +3,7 @@
 #include <stdlib.h>
 #define N 10
 
-__global__ void
-add(int *a, int *b, int *c)
+__global__ void add(int *a, int *b, int *c)
 {
     int tid = blockIdx.x * blockDim.x + threadIdx.x;
     if (tid < N)
