@@ -15,12 +15,12 @@ add(int *a, int *b, int *c)
 
 int main(void)
 {
-    int a[N], b[N], c[N];
+    int a[N], b[N], c[N], i;
     int *dev_a, *dev_b, *dev_c;
     cudaMalloc((void **)&dev_a, N * sizeof(int));
     cudaMalloc((void **)&dev_b, N * sizeof(int));
     cudaMalloc((void **)&dev_c, N * sizeof(int));
-    for (int i = 0; i < N; i++)
+    for (i = 0; i < N; i++)
     {
         a[i] = i;
         b[i] = i * 2;
@@ -30,7 +30,7 @@ int main(void)
     cudaMemcpy(dev_c, c, N * sizeof(int), cudaMemcpyHostToDevice);
     add<<<1, N>>>(dev_a, dev_b, dev_c);
     cudaMemcpy(c, dev_c, N * sizeof(int), cudaMemcpyDeviceToHost);
-    for (int i = 0; i < N; i++)
+    for (i = 0; i < N; i++)
     {
         printf("%d+%d=%d\n", a[i], b[i], c[i]);
     }
