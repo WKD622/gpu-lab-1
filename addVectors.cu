@@ -83,7 +83,7 @@ int main(int argc, char *argv[])
     }
     else
     {
-        printf("results are not similar\n");
+        printf("gpu time: %f, cpu time: %f, blocksize %d, grid size:%d\n", gpu_time, cpu_time, block_size, grid_size);
     }
 
     cudaFree(dev_a);
