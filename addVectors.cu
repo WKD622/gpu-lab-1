@@ -72,11 +72,10 @@ int main(int argc, char *argv[])
     sdkDeleteTimer(&timer);
     cudaMemcpy(c, dev_c, N * sizeof(int), cudaMemcpyDeviceToHost);
 
-    
     start = clock();
     cpu_add(a, b, c_cpu, N);
     end = clock();
-    cpu_time = ((float)(start - end) / CLOCKS_PER_SEC) * 1000.0;
+    cpu_time = ((float)(end - start) / CLOCKS_PER_SEC) * 1000.0;
 
     if (check_ans(c_cpu, c, N))
     {
@@ -84,7 +83,7 @@ int main(int argc, char *argv[])
     }
     else
     {
-        printf("results are not similar");
+        printf("results are not similar\n");
     }
 
     cudaFree(dev_a);
